@@ -22,7 +22,9 @@ class AppWindow(QMainWindow):
         # QtDesigner Code
         self.setObjectName("self")
         self.resize(800, 600)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
@@ -57,11 +59,12 @@ class AppWindow(QMainWindow):
         self.textBrowser.setDocumentTitle("")
         self.textBrowser.setReadOnly(True)
         self.textBrowser.setHtml(
-            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+            '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n'
+            '<html><head><meta name="qrichtext" content="1" /><style type="text/css">\n'
             "p, li { white-space: pre-wrap; }\n"
-            "</style></head><body style=\" font-family:\'Source Sans Pro\'; font-size:10pt; font-weight:600; font-style:normal;\">\n"
-            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:125%; background-color:#f8f8f8;\"><span style=\" font-family:\'Courier New\'; font-weight:400; font-style:italic; color:#408080;\"># No script is currently opened. Use CTRL+O or File &gt; Open Python Script to open a script</span></p></body></html>")
+            "</style></head><body style=\" font-family:'Source Sans Pro'; font-size:10pt; font-weight:600; font-style:normal;\">\n"
+            '<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:125%; background-color:#f8f8f8;"><span style=" font-family:\'Courier New\'; font-weight:400; font-style:italic; color:#408080;"># No script is currently opened. Use CTRL+O or File &gt; Open Python Script to open a script</span></p></body></html>'
+        )
         self.textBrowser.setOverwriteMode(False)
         self.textBrowser.setTabStopDistance(80.0)
         self.textBrowser.setAcceptRichText(True)
@@ -175,12 +178,16 @@ class AppWindow(QMainWindow):
         self.executeScript.setText(_translate("self", "Execute"))
         self.stopScript.setText(_translate("self", "Stop"))
         self.scriptName.setText(_translate("self", "No Script Selected"))
-        self.scriptConsole.setHtml(_translate("self",
-                                              "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                              "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                              "p, li { white-space: pre-wrap; }\n"
-                                              "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-                                              "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.scriptConsole.setHtml(
+            _translate(
+                "self",
+                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n'
+                '<html><head><meta name="qrichtext" content="1" /><style type="text/css">\n'
+                "p, li { white-space: pre-wrap; }\n"
+                "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+                '<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>',
+            )
+        )
         self.label_2.setText(_translate("self", "Repeat"))
         self.label_3.setText(_translate("self", "Delay"))
         self.menuFile.setTitle(_translate("self", "File"))
@@ -189,23 +196,31 @@ class AppWindow(QMainWindow):
         self.actionOpen_File.setStatusTip(_translate("self", "Open a Python Script"))
         self.actionOpen_File.setShortcut(_translate("self", "Ctrl+O"))
         self.actionClose_File.setText(_translate("self", "Close File"))
-        self.actionClose_File.setStatusTip(_translate("self", "Close Current Python Script"))
+        self.actionClose_File.setStatusTip(
+            _translate("self", "Close Current Python Script")
+        )
         self.actionClose_File.setShortcut(_translate("self", "Ctrl+W"))
 
     def openfile(self):
-        path = easygui.fileopenbox(title="Open a Python Script", default="c:/*.py", filetypes=["*.py", "*.pyc", "Python files"])
+        path = easygui.fileopenbox(
+            title="Open a Python Script",
+            default="c:/*.py",
+            filetypes=["*.py", "*.pyc", "Python files"],
+        )
         if path:
             if not path.endswith((".py", "pyc")):
-                easygui.exceptionbox("This program only accepts Python files!", "Exception Occurred")
+                easygui.exceptionbox(
+                    "This program only accepts Python files!", "Exception Occurred"
+                )
             else:
                 import requests
+
                 global script
                 script = path
 
                 self.scriptName.setText(path.split("\\")[-1])
                 if clearConsoleOnScriptChanged:
                     self.scriptConsole.clear()
-
                 with open(path) as f:
                     query = {"code": f.read(), "style": "default"}
                     response = requests.get("http://hilite.me/api", params=query).text
@@ -221,6 +236,7 @@ class AppWindow(QMainWindow):
 
     def execute(self):
         import threading
+
         def execute_thread():
             if script:
                 repeat = self.repeatAmount.value()
@@ -232,7 +248,10 @@ class AppWindow(QMainWindow):
                     self.executeScript.setEnabled(False)
                     break
                 import time
-                proc = subprocess.Popen(['python', script], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+                proc = subprocess.Popen(
+                    ["python", script], stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+                )
                 output = proc.communicate()[0].decode("utf-8")
                 self.scriptConsole.append(output)
                 self.scriptConsole.moveCursor(QtGui.QTextCursor.End)
@@ -252,8 +271,7 @@ class AppWindow(QMainWindow):
         self.executeScript.setEnabled(True)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = AppWindow()
     sys.exit(app.exec_())
